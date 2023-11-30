@@ -162,7 +162,7 @@ def main():
     st.set_page_config(page_title="YOUTH POLICY SEARCH BOT", page_icon=":robot:")
     st.title("정책 검색 서비스 : 정채기🔎")
     st.subheader("당신을 위한 맞춤 정책을 검색하고 싶다면 <정채기>한테 '안녕?'이라고 인사해주세요!")
-    df = pd.read_csv('policy_data231130.csv')
+    df = pd.read_csv('policy_processed_data_final.csv')
     st.write(len(df))
 
     placeholder = st.empty()
