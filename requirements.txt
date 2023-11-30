@@ -5,3 +5,4 @@ datetime
 streamlit
 streamlit_chat
 openai
+tabulate
