@@ -1,8 +1,9 @@
 langchain
-from langchain_experimental
+langchain_experimental
 os
 pandas
 datetime
 dotenv
 streamlit
 streamlit_chat
+openai
