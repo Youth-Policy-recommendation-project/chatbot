@@ -173,6 +173,9 @@ def main():
     if 'display_result' not in st.session_state:
         st.session_state.display_result = False
 
+    if conversation_key not in st.session_state:
+        st.session_state[conversation_key] = getConversation()
+
     if st.button("안녕?"):
         user_input = "안녕?"
         conversation = st.session_state[conversation_key]
@@ -184,13 +187,14 @@ def main():
             st.session_state[conversation_key] = getConversation()
 
         conversation = st.session_state[conversation_key]
-
         with placeholder.container():
             for index, msg in enumerate(conversation.memory.chat_memory.messages):
+
                 if msg.type == human_message_key:
                     message(msg.content, is_user=True, key=f"msg{index}")
                 else:
                     message(msg.content, key=f"msg{index}")
+
                     if '잠시만 기다려주세요' in msg.content :
                         if len(search_df(msg.content, df)) == 0 :
                             st.error('죄송합니다. 당신의 조건에 맞는 정책이 없습니다.')
@@ -199,7 +203,6 @@ def main():
                             st.info(df_summary(search_df(msg.content, df))['output'])
                         
 
-        
         st.text_input(label="Enter your message", placeholder="Send a message", key="user_input", on_change=submit)
 
     
