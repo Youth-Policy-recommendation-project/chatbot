@@ -148,9 +148,9 @@ def search_df(response, df) :
     temp = get_seg(seg_conds)
 
     temp.sort_values(by='BusinessApplyEnd_')
-    input_df = temp[['policyName','policyInfo','policyContent', 'BusinessApplyEnd', 'participationRestrictions','applicationProcedureDetails','segCategory']]
+    input_df = temp[['policyName','policyInfo','policyContent', 'BusinessApplyEnd', 'participationRestrictions','applicationProcedureDetails','segCategory']][0:10]
 
-    return input_df
+    return {'data' : input_df, 'number' : len(temp)}
 
 @st.cache
 def df_summary(input_df) :
@@ -207,8 +207,8 @@ def main():
                         if len(search_df(msg.content, df)) == 0 :
                             st.error('죄송합니다. 당신의 조건에 맞는 정책이 없습니다.')
                         else :
-                            st.success(f'**{len(search_df(msg.content, df))}**개의 정책이 있습니다.')
-                            st.info(df_summary(search_df(msg.content, df))['output'])
+                            st.success(f"**{search_df(msg.content, df)['number']}**개의 정책이 있습니다.")
+                            st.info(df_summary(search_df(msg.content, df)['data'])['output'])
 
         st.text_input(label="Enter your message", placeholder="Send a message", key="user_input", on_change=submit)
     
