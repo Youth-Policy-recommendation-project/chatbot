@@ -22,7 +22,6 @@ df = pd.read_csv('policy_data231130.csv')
 ###### 대화용 AI ######
 def getConversation():
     # api key 세팅
-    load_dotenv()
     os.environ["OPENAI_API_KEY"] = st.secrets["API_KEY"]
 
     # 시스템 설정: 역할부여 정의
