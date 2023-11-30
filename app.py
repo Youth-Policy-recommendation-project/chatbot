@@ -176,17 +176,24 @@ def main():
     if conversation_key not in st.session_state:
         st.session_state[conversation_key] = getConversation()
 
-    if st.button("안녕?"):
-        user_input = "안녕?"
-        conversation = st.session_state[conversation_key]
-        conversation.predict(input=user_input)
-        st.session_state.display_result = not st.session_state.display_result  # 버튼 클릭시 상태 변경
+    if 'button_clicked' not in st.session_state:
+        st.session_state.button_clicked = False
+
+    # 버튼 상태에 따라 버튼을 표시하거나 숨김
+    if not st.session_state.button_clicked:
+        if st.button("안녕?"):
+            user_input = "안녕?"
+            conversation = st.session_state[conversation_key]
+            conversation.predict(input=user_input)
+            st.session_state.display_result = not st.session_state.display_result  # 버튼 클릭시 상태 변경
+            st.session_state.button_clicked = True  # 버튼이 클릭되었음을 표시
 
     if st.session_state.display_result:
         if conversation_key not in st.session_state:
             st.session_state[conversation_key] = getConversation()
 
         conversation = st.session_state[conversation_key]
+
         with placeholder.container():
             for index, msg in enumerate(conversation.memory.chat_memory.messages):
 
