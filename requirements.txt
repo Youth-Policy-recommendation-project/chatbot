@@ -2,7 +2,6 @@ langchain==0.0.340
 langchain_experimental==0.0.42
 pandas
 datetime
-dotenv
 streamlit
 streamlit_chat
 openai
