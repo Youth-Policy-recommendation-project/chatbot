@@ -180,7 +180,7 @@ def main():
         user_input = "안녕?"
         conversation = st.session_state[conversation_key]
         conversation.predict(input=user_input)
-        st.session_state.display_result = True
+        st.session_state.display_result = not st.session_state.display_result  # 버튼 클릭시 상태 변경
 
     if st.session_state.display_result:
         if conversation_key not in st.session_state:
@@ -201,10 +201,8 @@ def main():
                         else :
                             st.success(f'**{len(search_df(msg.content, df))}**개의 정책이 있습니다.')
                             st.info(df_summary(search_df(msg.content, df))['output'])
-                        
 
         st.text_input(label="Enter your message", placeholder="Send a message", key="user_input", on_change=submit)
-
     
 if __name__ == '__main__':
     main()
