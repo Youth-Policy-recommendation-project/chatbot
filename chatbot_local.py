@@ -11,19 +11,20 @@ from langchain.chains import ConversationChain
 import os
 import pandas as pd
 import datetime as dt
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 import streamlit as st
 from streamlit_chat import message
 
 k=4
 conversation_key = "conversation"
 human_message_key = "human"
-# df = pd.read_csv('policy_data231130.csv')
+
 
 ###### 대화용 AI ######
 def getConversation():
     # api key 세팅
-    os.environ["OPENAI_API_KEY"] = st.secrets["API_KEY"]
+    load_dotenv()
+    os.environ["OPENAI_API_KEY"] = os.getenv("API_KEY")
 
     # 시스템 설정: 역할부여 정의
     system_message = SystemMessagePromptTemplate.from_template("""
@@ -101,6 +102,7 @@ def submit():
         conversation.predict(input=user_input)
 
 
+# def search_df(response) :
 def search_df(response, df) :
     df = df[['id','policyName','policyInfo','policyContent','BusinessApplyStart','BusinessApplyEnd',
          'participationRestrictions','applicationProcedureDetails','applyUrl',
@@ -155,14 +157,14 @@ def df_summary(input_df) :
                                           agent_type=AgentType.OPENAI_FUNCTIONS,
             )
     response = agent({"input":"모든 행을 각각 두세줄로 요약해서 친절하게 설명해줘"})
-    return response
+    return response['output']
    
 
 def main():
     st.set_page_config(page_title="YOUTH POLICY SEARCH BOT", page_icon=":robot:")
     st.title("정책 검색 서비스 : 정채기🔎")
     st.subheader("당신을 위한 맞춤 정책을 검색하고 싶다면 <정채기>한테 '안녕?'이라고 인사해주세요!")
-    df = pd.read_csv('policy_data231130.csv')
+    df = pd.read_csv('C://Users//Hyoju//Downloads//청년정책 processed_data.csv')
     st.write(len(df))
 
     placeholder = st.empty()
@@ -186,8 +188,8 @@ def main():
                 if '잠시만 기다려주세요' in msg.content :
                     st.write('-데이터프레임 검색중-')
                     st.code(df_summary(search_df(msg.content, df)))
+                    # st.code(df_summary(search_df(msg.content)))
 
-       
     st.text_input(label="Enter your message", placeholder="Send a message", key="user_input", on_change=submit)
 
     
