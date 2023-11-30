@@ -17,7 +17,7 @@ from streamlit_chat import message
 k=4
 conversation_key = "conversation"
 human_message_key = "human"
-df = pd.DataFrame('policy_data231130.csv')
+df = pd.read_csv('policy_data231130.csv')
 
 ###### 대화용 AI ######
 def getConversation():
