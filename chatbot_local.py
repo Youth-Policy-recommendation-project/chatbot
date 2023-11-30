@@ -109,9 +109,13 @@ def search_df(response, df) :
          'hostArea','startAge','endAge','mainCategory','segCategory']]
 
     # 자료형 날짜형으로 변환
-    df.loc['BusinessApplyStart_'] = df['BusinessApplyStart'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%d').replace(hour=0, minute=0, second=0))
-    df.loc['BusinessApplyEnd_'] = df['BusinessApplyEnd'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%d').replace(hour=23, minute=59, second=59))
-
+    try:
+        df['BusinessApplyStart_'] = df['BusinessApplyStart'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%d').replace(hour=0, minute=0, second=0))
+        df['BusinessApplyEnd_'] = df['BusinessApplyEnd'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%d').replace(hour=23, minute=59, second=59))
+    except Exception as e:
+        df['BusinessApplyStart_'] = f"Error: {e}"
+        df['BusinessApplyEnd_'] = f"Error: {e}"
+        
     # AI대답에서 사용자 정보 추출
     conditions = response.split(' ')
     age_cond = int(conditions[2].replace('세를',''))
@@ -164,7 +168,7 @@ def main():
     st.set_page_config(page_title="YOUTH POLICY SEARCH BOT", page_icon=":robot:")
     st.title("정책 검색 서비스 : 정채기🔎")
     st.subheader("당신을 위한 맞춤 정책을 검색하고 싶다면 <정채기>한테 '안녕?'이라고 인사해주세요!")
-    df = pd.read_csv('C://Users//Hyoju//Downloads//청년정책 processed_data.csv')
+    df = pd.read_csv('C://Users//Public//Documents//youth policy//chatbot//policy_processed_data_final.csv')
     st.write(len(df))
 
     placeholder = st.empty()

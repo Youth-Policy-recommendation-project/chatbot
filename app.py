@@ -107,9 +107,13 @@ def search_df(response, df) :
          'hostArea','startAge','endAge','mainCategory','segCategory']]
 
     # 자료형 날짜형으로 변환
-    df.loc['BusinessApplyStart_'] = df['BusinessApplyStart'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%d').replace(hour=0, minute=0, second=0))
-    df.loc['BusinessApplyEnd_'] = df['BusinessApplyEnd'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%d').replace(hour=23, minute=59, second=59))
-
+    try:
+        df['BusinessApplyStart_'] = df['BusinessApplyStart'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%d').replace(hour=0, minute=0, second=0))
+        df['BusinessApplyEnd_'] = df['BusinessApplyEnd'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%d').replace(hour=23, minute=59, second=59))
+    except Exception as e:
+        df['BusinessApplyStart_'] = f"Error: {e}"
+        df['BusinessApplyEnd_'] = f"Error: {e}"
+        
     # AI대답에서 사용자 정보 추출
     conditions = response.split(' ')
     age_cond = int(conditions[2].replace('세를',''))
