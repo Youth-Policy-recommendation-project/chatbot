@@ -189,7 +189,7 @@ def main():
                 message(msg.content, key=f"msg{index}")
                 if '잠시만 기다려주세요' in msg.content :
                     st.write('-데이터프레임 검색중-')
-                    if len(search_df(msg.contetn, df)) == 0 :
+                    if len(search_df(msg.content, df)) == 0 :
                         st.write('죄송합니다. 당신의 조건에 맞는 정책이 없습니다.')
                     else :
                         st.markdown(f'*{len(search_df(msg.content, df))}*개의 정책이 있습니다.')
