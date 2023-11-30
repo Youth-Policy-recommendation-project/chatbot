@@ -11,20 +11,19 @@ from langchain.chains import ConversationChain
 import os
 import pandas as pd
 import datetime as dt
-from dotenv import load_dotenv
 import streamlit as st
 from streamlit_chat import message
 
 k=4
 conversation_key = "conversation"
 human_message_key = "human"
-
+df = pd.DataFrame('policy_data231130.csv')
 
 ###### 대화용 AI ######
 def getConversation():
     # api key 세팅
     load_dotenv()
-    os.environ["OPENAI_API_KEY"] = os.getenv("API_KEY")
+    os.environ["OPENAI_API_KEY"] = st.secrets["API_KEY"]
 
     # 시스템 설정: 역할부여 정의
     system_message = SystemMessagePromptTemplate.from_template("""
