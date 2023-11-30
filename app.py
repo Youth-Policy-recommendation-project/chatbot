@@ -8,6 +8,7 @@ from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe
 from langchain.agents.agent_types import AgentType
 from langchain.chains import ConversationChain
 
+import time
 import os
 import pandas as pd
 import datetime as dt
@@ -28,7 +29,7 @@ def getConversation():
     # 시스템 설정: 역할부여 정의
     system_message = SystemMessagePromptTemplate.from_template("""
     너는 사용자에게 정책을 찾아주는 자동응답기야.
-    사용자가 너에게 인사를 하면 너는 '안녕하세요! 저는 정채기입니다. 당신에게 맞는 정책을 찾아드릴게요.'라고 하고,
+    사용자가 너에게 인사를 하면 너는 '안녕하세요! 저는 정책이입니다. 당신에게 맞는 정책을 찾아드릴게요.'라고 하고,
     사용자의 <나이>를 물어봐야 해.
     그 다음에 <지역>을 물어봐야 해. 답변은 광역시나 도 단위로 나와야 해.(예: 서울, 인천, 경기도, 충청남도)
     만약 사용자가 광역시나 도 단위로 대답하지 않았거나 대한민국의 지역이 아니라면 다시 물어봐야해.
@@ -160,14 +161,13 @@ def df_summary(input_df) :
             )
     response = agent({"input":"모든 행을 각각 두세줄로 요약해서 친절하게 설명해줘"})
     return response
-   
+
 
 def main():
     st.set_page_config(page_title="YOUTH POLICY SEARCH BOT", page_icon=":robot:")
-    st.title("정책 검색 서비스 : 정채기🔎")
-    st.subheader("당신을 위한 맞춤 정책을 검색하고 싶다면 <정채기>한테 '안녕?'이라고 인사해주세요!")
+    st.title("정책 검색 서비스 : 정책이🔎")
+    st.subheader("당신을 위한 맞춤 정책을 검색하고 싶다면 <정책이>한테 '안녕?'이라고 인사해주세요!")
     df = pd.read_csv('policy_processed_data_final.csv')
-    st.write(len(df))
 
     placeholder = st.empty()
 
@@ -188,12 +188,11 @@ def main():
             else:
                 message(msg.content, key=f"msg{index}")
                 if '잠시만 기다려주세요' in msg.content :
-                    st.write('-데이터프레임 검색중-')
                     if len(search_df(msg.content, df)) == 0 :
-                        st.write('죄송합니다. 당신의 조건에 맞는 정책이 없습니다.')
+                        st.error('죄송합니다. 당신의 조건에 맞는 정책이 없습니다.')
                     else :
-                        st.markdown(f'*{len(search_df(msg.content, df))}*개의 정책이 있습니다.')
-                        st.markdown(df_summary(search_df(msg.content, df))['output'])
+                        st.success(f'**{len(search_df(msg.content, df))}**개의 정책이 있습니다.')
+                        st.info(df_summary(search_df(msg.content, df))['output'])
                        
 
        
