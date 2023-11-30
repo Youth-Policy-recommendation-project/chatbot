@@ -1,6 +1,5 @@
-langchain
-langchain_experimental
-os
+langchain==0.0.340
+langchain_experimental==0.0.42
 pandas
 datetime
 dotenv
