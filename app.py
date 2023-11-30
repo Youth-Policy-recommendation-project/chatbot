@@ -148,7 +148,7 @@ def search_df(response, df) :
     temp = get_seg(seg_conds)
 
     temp.sort_values(by='BusinessApplyEnd_')
-    input_df = temp[['policyName','policyInfo','policyContent', 'BusinessApplyEnd', 'participationRestrictions','applicationProcedureDetails','segCategory']][0:10]
+    input_df = temp[['policyName','policyInfo','policyContent', 'BusinessApplyEnd', 'participationRestrictions','applicationProcedureDetails','segCategory']]
 
     return input_df
 
@@ -162,7 +162,6 @@ def df_summary(input_df) :
     response = agent({"input":"모든 행을 각각 두세줄로 요약해서 친절하게 설명해줘"})
     return response
 
-
 def main():
     st.set_page_config(page_title="YOUTH POLICY SEARCH BOT", page_icon=":robot:")
     st.title("정책 검색 서비스 : 정책이🔎")
@@ -171,32 +170,37 @@ def main():
 
     placeholder = st.empty()
 
+    if 'display_result' not in st.session_state:
+        st.session_state.display_result = False
+
     if st.button("안녕?"):
         user_input = "안녕?"
         conversation = st.session_state[conversation_key]
         conversation.predict(input=user_input)
+        st.session_state.display_result = True
 
-    if conversation_key not in st.session_state:
-        st.session_state[conversation_key] = getConversation()
+    if st.session_state.display_result:
+        if conversation_key not in st.session_state:
+            st.session_state[conversation_key] = getConversation()
 
-    conversation = st.session_state[conversation_key]
+        conversation = st.session_state[conversation_key]
 
-    with placeholder.container():
-        for index, msg in enumerate(conversation.memory.chat_memory.messages):
-            if msg.type == human_message_key:
-                message(msg.content, is_user=True, key=f"msg{index}")
-            else:
-                message(msg.content, key=f"msg{index}")
-                if '잠시만 기다려주세요' in msg.content :
-                    if len(search_df(msg.content, df)) == 0 :
-                        st.error('죄송합니다. 당신의 조건에 맞는 정책이 없습니다.')
-                    else :
-                        st.success(f'**{len(search_df(msg.content, df))}**개의 정책이 있습니다.')
-                        st.info(df_summary(search_df(msg.content, df))['output'])
-                       
+        with placeholder.container():
+            for index, msg in enumerate(conversation.memory.chat_memory.messages):
+                if msg.type == human_message_key:
+                    message(msg.content, is_user=True, key=f"msg{index}")
+                else:
+                    message(msg.content, key=f"msg{index}")
+                    if '잠시만 기다려주세요' in msg.content :
+                        if len(search_df(msg.content, df)) == 0 :
+                            st.error('죄송합니다. 당신의 조건에 맞는 정책이 없습니다.')
+                        else :
+                            st.success(f'**{len(search_df(msg.content, df))}**개의 정책이 있습니다.')
+                            st.info(df_summary(search_df(msg.content, df))['output'])
+                        
 
-       
-    st.text_input(label="Enter your message", placeholder="Send a message", key="user_input", on_change=submit)
+        
+        st.text_input(label="Enter your message", placeholder="Send a message", key="user_input", on_change=submit)
 
     
 if __name__ == '__main__':
