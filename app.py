@@ -113,7 +113,7 @@ def search_df(response, df) :
     except Exception as e:
         df['BusinessApplyStart_'] = f"Error: {e}"
         df['BusinessApplyEnd_'] = f"Error: {e}"
-        
+
     # AI대답에서 사용자 정보 추출
     conditions = response.split(' ')
     age_cond = int(conditions[2].replace('세를',''))
@@ -189,7 +189,8 @@ def main():
                 message(msg.content, key=f"msg{index}")
                 if '잠시만 기다려주세요' in msg.content :
                     st.write('-데이터프레임 검색중-')
-                    st.code(df_summary(search_df(msg.content, df)))
+                    st.markdown(df_summary(search_df(msg.content, df))['output'])
+                    st.subheader(len(search_df(msg.content, df)),'개의 정책이 있습니다.')
 
        
     st.text_input(label="Enter your message", placeholder="Send a message", key="user_input", on_change=submit)
